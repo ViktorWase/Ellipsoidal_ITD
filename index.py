@@ -1,4 +1,5 @@
 from random import gauss, seed, shuffle
+from math import fabs
 
 from read_mat import read_ellipse_data
 from rnn import error_of_diablo, differential_evolution
@@ -38,9 +39,9 @@ for i in range(len(nodes_per_layer)):
 	n += prev*nodes_per_layer[i]
 	prev = nodes_per_layer[i]
 
-curry_func = lambda x: error_of_diablo(x, nodes_per_layer, test_data)
+curry_func = lambda x: error_of_diablo(x, nodes_per_layer, test_data)+ 0.1*sum(fabs(val) for val in x)/len(x)
 initial_pop = [[gauss(0, 1.0e-4) for _ in range(n)] for _ in range(20)]
 
-w = differential_evolution( curry_func, initial_pop, 1000)
+w = differential_evolution( curry_func, initial_pop, 2000)
 
 print(error_of_diablo(w, nodes_per_layer, trial_data))
